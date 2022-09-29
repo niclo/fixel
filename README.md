@@ -22,6 +22,12 @@ Step 3:
 sudo cp target/release/fixel /usr/local/bin
 ```
 
+Step 4:
+
+```
+fixel --help
+```
+
 ## Why?
 
 I don't know.

@@ -9,12 +9,12 @@ fn main() -> Result<()> {
     let matches = Command::new("fixel")
         .version("0.1.0")
         .author("Nicholas L.")
-        .about("fixel randomly reorders the pixels of an image")
+        .about("Fixel randomly reorders the pixels of an image.")
         .arg(
             Arg::new("image")
                 .required(true)
                 .value_parser(value_parser!(String))
-                .help("name of image that should be used"),
+                .help("Name of image that should be used"),
         )
         .get_matches();
     // getting argument

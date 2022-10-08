@@ -20,15 +20,14 @@ fn main() -> Result<()> {
     // getting argument
     let image_file_name: &String = matches
         .get_one::<String>("image")
-        .expect("`image` argument is required");
+        .with_context(|| "`image` argument is required")?;
 
     // image_path is the path provided by the user
     let image_path: &Path = Path::new(image_file_name);
-    let img = image::open(&image_path).with_context(|| {
-        format!("could not open image file: {}", &image_path.display())
-    })?;
+    let img = image::open(&image_path)
+        .with_context(|| format!("Could not open image file: {}", &image_path.display()))?;
     // creating new image path
-    let path_buf: PathBuf = fixel::get_new_path(image_path);
+    let path_buf: PathBuf = fixel::get_new_path(image_path)?;
     let new_image_path: &Path = path_buf.as_path();
     // fuzzing the pixels
     let img_buff: ImageBuffer<Rgba<u8>, Vec<u8>> = fixel::fix_the_pix(&img)?;
@@ -37,11 +36,11 @@ fn main() -> Result<()> {
         "Saving fuzzy image: `{}`",
         new_image_path
             .to_str()
-            .expect("Could not covert path to str")
+            .with_context(|| "Could not covert path to &str")?
     );
-    img_buff.save(new_image_path).with_context(|| {
-        format!("could not save image file: {}", &new_image_path.display())
-    })?;
+    img_buff
+        .save(new_image_path)
+        .with_context(|| format!("Could not save image file: {}", &new_image_path.display()))?;
 
     Ok(())
 }

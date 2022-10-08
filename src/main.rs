@@ -31,7 +31,7 @@ fn main() -> Result<()> {
     let path_buf: PathBuf = fixel::get_new_path(image_path);
     let new_image_path: &Path = path_buf.as_path();
     // fuzzing the pixels
-    let img_buff: ImageBuffer<Rgba<u8>, Vec<u8>> = fixel::fix_the_pix(&img);
+    let img_buff: ImageBuffer<Rgba<u8>, Vec<u8>> = fixel::fix_the_pix(&img)?;
 
     println!(
         "Saving fuzzy image: `{}`",

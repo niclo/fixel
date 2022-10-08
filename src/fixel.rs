@@ -1,3 +1,4 @@
+use anyhow::{bail, Error};
 use image::{DynamicImage, GenericImageView, ImageBuffer, Rgba, RgbaImage};
 use rand::prelude::*;
 use std::{
@@ -5,7 +6,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-pub fn fix_the_pix(img: &DynamicImage) -> ImageBuffer<Rgba<u8>, Vec<u8>> {
+pub fn fix_the_pix(img: &DynamicImage) -> Result<ImageBuffer<Rgba<u8>, Vec<u8>>, Error> {
     let (imgx, imgy) = img.dimensions();
     let mut img_buff = RgbaImage::new(imgx, imgy);
 
@@ -14,9 +15,12 @@ pub fn fix_the_pix(img: &DynamicImage) -> ImageBuffer<Rgba<u8>, Vec<u8>> {
     source.shuffle(&mut rng);
 
     for (_, _, px) in img_buff.enumerate_pixels_mut() {
-        *px = source.pop().unwrap();
+        *px = match source.pop() {
+            Some(px) => px,
+            None => bail!("No pixels left to pop in buffer"),
+        };
     }
-    img_buff
+    Ok(img_buff)
 }
 
 pub fn get_new_path(path: &Path) -> PathBuf {
